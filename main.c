@@ -1,11 +1,15 @@
 // DATA
-
 #include <pthread.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <errno.h>
 
 struct ThreadData_s {
     pthread_t threadIdCli;
     pthread_mutex_t stopper;
-}
+};
 
 static struct ThreadData_s globTD;
 
@@ -19,18 +23,18 @@ static struct ThreadData_s globTD;
 
 /*--------------*/
 
-// child thread
+// Child thread
 
-int NeedQiut(pthread_mutex_t *mtx) {
-    switch(pthread_mutex_trylock(mtx)) {
+int NeedQuit(pthread_mutex_t *mtx) {
+    switch (pthread_mutex_trylock(mtx)) {
         case 0:
             pthread_mutex_unlock(mtx);
             return 1;
         case EBUSY:
             return 0;
         default:
-            // log err...
-            exit(-1);
+            perror("Error locking mutex");
+            exit(EXIT_FAILURE);
     }
 }
 
@@ -39,45 +43,55 @@ void *Cli(void *arg) {
 
     SET_WORK_TIMEOUT
 
-    while(!NeedQiut(&threadData->stopper)) {
+    while (!NeedQuit(&threadData->stopper)) {
         // ...
+        printf("Child thread is doing some work...\n");
         WORK_TIMEOUT
     }
-    // preint
+
+    // Прощальное сообщение
+    printf("Child thread says goodbye!\n");
+
+    return NULL;
 }
 
 //--------------
 
-// main thread
+// Main thread
 
-int InitWorkThreds() {
-
+int InitWorkThreads() {
     struct ThreadData_s *threadData = &globTD;
 
-    if (pthread_mutex_lock(&threadData->stopper, NULL) != 0) {
-        // ... log error
-        // ... ret
+    if (pthread_mutex_lock(&threadData->stopper) != 0) {
+        perror("Error locking mutex for thread initialization");
+        return 0;  // Возвращаем 0
     }
 
-    pthread_create(&threadData->threadIdCli, NULL, Cli, threadData);
+    if (pthread_create(&threadData->threadIdCli, NULL, Cli, threadData) != 0) {
+        perror("Error creating thread");
+        pthread_mutex_unlock(&threadData->stopper);  // Разблокировать мьютекс перед выходом
+        return 0;
+    }
 
     return 1;
 }
 
-
 void DestroyWorkThreads() {
+    struct ThreadData_s *threadData = &globTD;
+
     if (pthread_mutex_unlock(&threadData->stopper) == EPERM) {
-        // log
+        perror("Error unlocking mutex");
         return;
     }
 
-    pthread_join(threadData->threadIdCli, NULL);
+    if (pthread_join(threadData->threadIdCli, NULL) != 0) {
+        perror("Error joining thread");
+    }
 }
-
 
 int main() {
     sigset_t sigset;
-    int signo
+    int signo;
 
     sigemptyset(&sigset);
     sigaddset(&sigset, SIGQUIT);
@@ -86,10 +100,13 @@ int main() {
 
     sigprocmask(SIG_BLOCK, &sigset, NULL);
 
-    int status = InitWorkThreds();
+    int status = InitWorkThreads();
     if (status == 1) {
         sigwait(&sigset, &signo);
         DestroyWorkThreads();
+    } else {
+        fprintf(stderr, "Failed to initialize threads\n");
     }
+
     return 0;
 }
