@@ -11,8 +11,6 @@ struct ThreadData_s {
     pthread_mutex_t stopper;
 };
 
-static struct ThreadData_s globTD;
-
 #define SET_WORK_TIMEOUT \
     struct timespec ts; \
     ts.tv_sec = 0; \
@@ -59,9 +57,7 @@ void *Cli(void *arg) {
 
 // Main thread
 
-int InitWorkThreads() {
-    struct ThreadData_s *threadData = &globTD;
-
+int InitWorkThreads(struct ThreadData_s *threadData) {
     if (pthread_mutex_lock(&threadData->stopper) != 0) {
         perror("Error locking mutex for thread initialization");
         return 0;  // Возвращаем 0
@@ -76,8 +72,7 @@ int InitWorkThreads() {
     return 1;
 }
 
-void DestroyWorkThreads() {
-    struct ThreadData_s *threadData = &globTD;
+void DestroyWorkThreads(struct ThreadData_s *threadData) {
 
     if (pthread_mutex_unlock(&threadData->stopper) == EPERM) {
         perror("Error unlocking mutex");
@@ -90,6 +85,11 @@ void DestroyWorkThreads() {
 }
 
 int main() {
+
+    struct ThreadData_s threadData;
+
+    threadData.threadIdCli = pthread_self(); // Инициализация текущим потоком для предотвращения ошибки
+
     sigset_t sigset;
     int signo;
 
@@ -100,10 +100,10 @@ int main() {
 
     sigprocmask(SIG_BLOCK, &sigset, NULL);
 
-    int status = InitWorkThreads();
+    int status = InitWorkThreads(&threadData);
     if (status == 1) {
         sigwait(&sigset, &signo);
-        DestroyWorkThreads();
+        DestroyWorkThreads(&threadData);
     } else {
         fprintf(stderr, "Failed to initialize threads\n");
     }
