@@ -58,6 +58,13 @@ void *Cli(void *arg) {
 // Main thread
 
 int InitWorkThreads(struct ThreadData_s *threadData) {
+
+    // Инициализация мьютекса
+    if (pthread_mutex_init(&threadData->stopper, NULL) != 0) {
+        perror("Error initializing mutex for thread");
+        return 0;
+    }
+
     if (pthread_mutex_lock(&threadData->stopper) != 0) {
         perror("Error locking mutex for thread initialization");
         return 0;  // Возвращаем 0
@@ -87,8 +94,6 @@ void DestroyWorkThreads(struct ThreadData_s *threadData) {
 int main() {
 
     struct ThreadData_s threadData;
-
-    threadData.threadIdCli = pthread_self(); // Инициализация текущим потоком для предотвращения ошибки
 
     sigset_t sigset;
     int signo;
