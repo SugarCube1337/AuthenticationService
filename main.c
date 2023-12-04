@@ -5,16 +5,18 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <errno.h>
+#include <string.h>
 
 struct ThreadData_s {
     pthread_t threadIdCli;
     pthread_mutex_t stopper;
+    pthread_t mainPid;
 };
 
 #define SET_WORK_TIMEOUT \
     struct timespec ts; \
     ts.tv_sec = 0; \
-    ts.tv_nsec = 1000000000 / 2;
+    ts.tv_nsec = 100000000;
 
 #define WORK_TIMEOUT \
     nanosleep(&ts, NULL);
@@ -36,14 +38,48 @@ int NeedQuit(pthread_mutex_t *mtx) {
     }
 }
 
+int InputAvailable() {
+    struct timeval tv;
+    fd_set fdSet;
+
+    tv.tv_sec = 0;
+    tv.tv_usec = 0;
+
+    FD_ZERO(&fdSet);
+    FD_SET(STDIN_FILENO, &fdSet);
+
+    select(STDIN_FILENO + 1, &fdSet, NULL, NULL, &tv);
+    return (FD_ISSET(0, &fdSet));
+
+}
+
 void *Cli(void *arg) {
-    struct ThreadData_s *threadData = (struct ThreadData_s *)arg;
+    struct ThreadData_s *threadData = (struct ThreadData_s *) arg;
 
     SET_WORK_TIMEOUT
 
+    char userInput[256];
+    memset(userInput, 0, sizeof(userInput));
+    setbuf(stdout, NULL);
+    printf("> ");
+
     while (!NeedQuit(&threadData->stopper)) {
-        // ...
-        printf("Child thread is doing some work...\n");
+        if (InputAvailable()) {
+            fgets(userInput, sizeof(userInput), stdin);
+
+            if (memcmp(userInput, "exit", 4) == 0) {
+                kill(threadData->mainPid, SIGUSR1);
+                break;
+            } else if (memcmp(userInput, "\n", 1) == 0) {
+                printf("> ");
+                memset(userInput, 0, sizeof(userInput));
+            } else {
+                printf("Unknown command: %s", userInput);
+                printf("> ");
+                memset(userInput, 0, sizeof(userInput));
+            }
+        }
+
         WORK_TIMEOUT
     }
 
@@ -79,6 +115,7 @@ int InitWorkThreads(struct ThreadData_s *threadData) {
     return 1;
 }
 
+
 void DestroyWorkThreads(struct ThreadData_s *threadData) {
 
     if (pthread_mutex_unlock(&threadData->stopper) == EPERM) {
@@ -89,6 +126,7 @@ void DestroyWorkThreads(struct ThreadData_s *threadData) {
     if (pthread_join(threadData->threadIdCli, NULL) != 0) {
         perror("Error joining thread");
     }
+
 }
 
 int main() {
@@ -102,6 +140,7 @@ int main() {
     sigaddset(&sigset, SIGQUIT);
     sigaddset(&sigset, SIGINT);
     sigaddset(&sigset, SIGTERM);
+    sigaddset(&sigset, SIGUSR1);
 
     sigprocmask(SIG_BLOCK, &sigset, NULL);
 
