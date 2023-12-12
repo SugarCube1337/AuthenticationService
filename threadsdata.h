@@ -2,7 +2,7 @@
 #define THREADSDATA_H
 
 #include <pthread.h>
-#include "mongodata.h"
+#include "database/mongodata.h"
 
 struct ThreadData_s {
     int mainPid;

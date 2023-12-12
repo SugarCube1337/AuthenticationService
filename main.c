@@ -6,8 +6,8 @@
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
-#include "cli.h"
-#include "database.h"
+#include "cli/cli.h"
+#include "database/database.h"
 
 // Main thread
 

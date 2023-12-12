@@ -7,13 +7,13 @@ find_package(mongoc-1.0 1.7 REQUIRED)
 
 add_executable(AuthenticationService main.c
         threadsdata.h
-        cli.h
-        cli.c
-        utils.c
-        utils.h
-        database.h
-        database.c
-        mongodata.h)
+        cli/cli.h
+        cli/cli.c
+        utils/utils.c
+        utils/utils.h
+        database/database.h
+        database/database.c
+        database/mongodata.h)
 
 target_link_libraries(AuthenticationService PRIVATE mongo::mongoc_shared)
 
