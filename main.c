@@ -6,113 +6,9 @@
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
-
-struct ThreadData_s {
-    pthread_t threadIdCli;
-    pthread_mutex_t stopper;
-    pthread_t mainPid;
-};
-
-#define SET_WORK_TIMEOUT \
-    struct timespec ts; \
-    ts.tv_sec = 0; \
-    ts.tv_nsec = 100000000;
-
-#define WORK_TIMEOUT \
-    nanosleep(&ts, NULL);
-
-
-/*--------------*/
-
-// Child thread
-
-int NeedQuit(pthread_mutex_t *mtx) {
-    switch (pthread_mutex_trylock(mtx)) {
-        case 0:
-            pthread_mutex_unlock(mtx);
-            return 1;
-        case EBUSY:
-            return 0;
-        default:
-            perror("Error locking mutex");
-            exit(EXIT_FAILURE);
-    }
-}
-
-// Command interface
-typedef struct {
-    void (*execute)(struct ThreadData_s *threadData);
-} Command;
-
-void exitCommand(struct ThreadData_s *threadData) {
-    kill(threadData->mainPid, SIGUSR1);
-}
-
-void helpCommand() {
-    printf("Available commands:\nhelp - shows information about commands\nexit - stops the program\n>");
-}
-
-int InputAvailable() {
-    struct timeval tv;
-    fd_set fdSet;
-
-    tv.tv_sec = 0;
-    tv.tv_usec = 0;
-
-    FD_ZERO(&fdSet);
-    FD_SET(STDIN_FILENO, &fdSet);
-
-    select(STDIN_FILENO + 1, &fdSet, NULL, NULL, &tv);
-    return (FD_ISSET(0, &fdSet));
-
-}
-
-void *Cli(void *arg) {
-    struct ThreadData_s *threadData = (struct ThreadData_s *) arg;
-
-    SET_WORK_TIMEOUT
-
-    char userInput[256];
-    memset(userInput, 0, sizeof(userInput));
-    setbuf(stdout, NULL);
-    printf("> ");
-
-    // Define commands
-    Command exitCmd = {exitCommand};
-    Command helpCmd = {helpCommand};
-
-    while (!NeedQuit(&threadData->stopper)) {
-        if (InputAvailable()) {
-            fgets(userInput, sizeof(userInput), stdin);
-
-            if (memcmp(userInput, "exit", 4) == 0) {
-                exitCmd.execute(threadData);
-                break;
-            } else if (memcmp(userInput, "help", 4) == 0){
-                helpCmd.execute(threadData);
-            }
-            else if (memcmp(userInput, "\n", 1) == 0) {
-                printf("> ");
-                memset(userInput, 0, sizeof(userInput));
-            }
-            else {
-                printf("Unknown command: %s", userInput);
-                printf("Type 'help' for available commands.\n");
-                printf("> ");
-                memset(userInput, 0, sizeof(userInput));
-            }
-        }
-
-        WORK_TIMEOUT
-    }
-
-    // Прощальное сообщение
-    printf("Child thread says goodbye!\n");
-
-    return NULL;
-}
-
-//--------------
+#include <mongoc.h>
+#include "utils.h"
+#include "cli.h"
 
 // Main thread
 
@@ -155,7 +51,7 @@ void DestroyWorkThreads(struct ThreadData_s *threadData) {
 int main() {
 
     struct ThreadData_s threadData;
-
+    threadData.mainPid = getpid();
     sigset_t sigset;
     int signo;
 
@@ -174,6 +70,6 @@ int main() {
     } else {
         fprintf(stderr, "Failed to initialize threads\n");
     }
-
+    printf("Main thread says goodbye!\n");
     return 0;
 }
