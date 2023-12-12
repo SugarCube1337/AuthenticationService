@@ -2,12 +2,13 @@
 #define THREADSDATA_H
 
 #include <pthread.h>
+#include "mongodata.h"
 
 struct ThreadData_s {
-    pthread_t threadIdCli;
+    int mainPid;
     pthread_mutex_t stopper;
-    pthread_t mainPid;
+    pthread_t threadIdCli;
+    struct MongoData_s db;
 };
 
 #endif
-

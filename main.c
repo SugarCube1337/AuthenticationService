@@ -6,9 +6,8 @@
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
-#include <mongoc.h>
-#include "utils.h"
 #include "cli.h"
+#include "database.h"
 
 // Main thread
 
@@ -49,11 +48,15 @@ void DestroyWorkThreads(struct ThreadData_s *threadData) {
 }
 
 int main() {
-
     struct ThreadData_s threadData;
     threadData.mainPid = getpid();
     sigset_t sigset;
-    int signo;
+    int signo, status;
+
+    status = InitDb(&threadData);
+    if (status == 0) {
+        exit(1);
+    }
 
     sigemptyset(&sigset);
     sigaddset(&sigset, SIGQUIT);
@@ -63,13 +66,15 @@ int main() {
 
     sigprocmask(SIG_BLOCK, &sigset, NULL);
 
-    int status = InitWorkThreads(&threadData);
+    status = InitWorkThreads(&threadData);
     if (status == 1) {
         sigwait(&sigset, &signo);
         DestroyWorkThreads(&threadData);
     } else {
         fprintf(stderr, "Failed to initialize threads\n");
     }
+    DestroyDb(&threadData);
+
     printf("Main thread says goodbye!\n");
     return 0;
 }
