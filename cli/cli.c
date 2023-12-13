@@ -137,9 +137,102 @@ void addUser(struct ThreadData_s *threadData) {
     bson_destroy(createdUserDoc);
 }
 
-void updateUser(struct ThreadData_s *threadData){
 
+void updateUser(struct ThreadData_s *threadData) {
+    bson_error_t error;
+    char userInput[1024];
+    memset(userInput, 0, sizeof(userInput));
+
+    SET_WORK_TIMEOUT
+
+    printf("Enter user OID: ");
+    while (!NeedQuit(&threadData->stopper)) {
+        if (InputAvailable()) {
+            fgets(userInput, sizeof(userInput), stdin);
+            userInput[strlen(userInput) - 1] = '\0'; // remove '\n'
+            break;
+        }
+        WORK_TIMEOUT
+    }
+
+    printf("User OID: %s\n", userInput);
+
+    bson_oid_t userOid;
+    bson_oid_init_from_string(&userOid, userInput);
+
+    bson_t *query = bson_new();
+    BSON_APPEND_OID(query, "_id", &userOid);
+
+    const bson_t *foundDoc;
+    mongoc_cursor_t *cursor = mongoc_collection_find_with_opts(threadData->db.collUser, query, NULL, NULL);
+
+    if (!mongoc_cursor_next(cursor, &foundDoc)) {
+        printf("User not found.\n");
+        bson_destroy(query);
+        mongoc_cursor_destroy(cursor);
+        return;
+    }
+
+    printf("User found.\n");
+
+    printf("Do you want to add or remove a service? (add/remove): ");
+    while (!NeedQuit(&threadData->stopper)) {
+        if (InputAvailable()) {
+            fgets(userInput, sizeof(userInput), stdin);
+            userInput[strlen(userInput) - 1] = '\0'; // remove '\n'
+            break;
+        }
+        WORK_TIMEOUT
+    }
+
+    printf("Option: %s\n", userInput);
+
+    if (strcmp(userInput, "add") == 0) {
+        printf("Enter service name to add: ");
+        while (!NeedQuit(&threadData->stopper)) {
+            if (InputAvailable()) {
+                fgets(userInput, sizeof(userInput), stdin);
+                userInput[strlen(userInput) - 1] = '\0'; // remove '\n'
+                break;
+            }
+            WORK_TIMEOUT
+        }
+
+        printf("Adding service: %s\n", userInput);
+
+        bson_t *update = BCON_NEW("$addToSet", "{", "services", BCON_UTF8(userInput), "}");
+        if (!mongoc_collection_update_one(threadData->db.collUser, query, update, NULL, NULL, &error)) {
+            fprintf(stderr, "Update failed: %s\n", error.message);
+        }
+        bson_destroy(update);
+        printf("Service added.\n");
+    } else if (strcmp(userInput, "remove") == 0) {
+        printf("Enter service name to remove: ");
+        while (!NeedQuit(&threadData->stopper)) {
+            if (InputAvailable()) {
+                fgets(userInput, sizeof(userInput), stdin);
+                userInput[strlen(userInput) - 1] = '\0'; // remove '\n'
+                break;
+            }
+            WORK_TIMEOUT
+        }
+
+        printf("Removing service: %s\n", userInput);
+
+        bson_t *update = BCON_NEW("$pull", "{", "services", BCON_UTF8(userInput), "}");
+        if (!mongoc_collection_update_one(threadData->db.collUser, query, update, NULL, NULL, &error)) {
+            fprintf(stderr, "Update failed: %s\n", error.message);
+        }
+        bson_destroy(update);
+        printf("Service removed.\n");
+    } else {
+        printf("Invalid option.\n");
+    }
+
+    bson_destroy(query);
+    mongoc_cursor_destroy(cursor);
 }
+
 
 void showUsers(struct ThreadData_s *threadData) {
     const bson_t *foundDoc;
