@@ -8,6 +8,8 @@
 #include <string.h>
 #include "cli/cli.h"
 #include "database/database.h"
+#include "threadsdata.h"
+#include "server/server.c"
 
 // Main thread
 
@@ -29,6 +31,11 @@ int InitWorkThreads(struct ThreadData_s *threadData) {
         pthread_mutex_unlock(&threadData->stopper);  // Разблокировать мьютекс перед выходом
         return 0;
     }
+    if (pthread_create(&threadData->threadIdNet, NULL, NetInterface, threadData) != 0) {
+        perror("Error creating thread for REST API");
+        pthread_mutex_unlock(&threadData->stopper);  // Разблокировать мьютекс перед выходом
+        return 0;
+    }
 
     return 1;
 }
@@ -43,6 +50,9 @@ void DestroyWorkThreads(struct ThreadData_s *threadData) {
 
     if (pthread_join(threadData->threadIdCli, NULL) != 0) {
         perror("Error joining thread");
+    }
+    if (pthread_join(threadData->threadIdNet, NULL) != 0) {
+        perror("Error joining REST API thread");
     }
 
 }

@@ -9,6 +9,7 @@ struct ThreadData_s {
     pthread_mutex_t stopper;
     pthread_t threadIdCli;
     struct MongoData_s db;
+    pthread_t threadIdNet;
 };
 
 #endif
