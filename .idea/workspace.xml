@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="CMakePresetLoader">{
+  &quot;useNewFormat&quot;: true
+}</component>
+  <component name="CMakeReloadState">
+    <option name="reloaded" value="true" />
+  </component>
+  <component name="CMakeRunConfigurationManager">
+    <generated>
+      <config projectName="AuthenticationService" targetName="AuthenticationService" />
+      <config projectName="AuthenticationService" targetName="AuthenticationServiceClient" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="18614630-4c5a-46a4-8410-2248a62b0d69" name="Changes" comment="epoll add">
+      <change afterPath="$PROJECT_DIR$/deploy/database/db/journal/WiredTigerLog.0000000062" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deploy/database/db/journal/WiredTigerLog.0000000063" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deploy/database/db/journal/WiredTigerTmplog.0000000002" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client.c" beforeDir="false" afterPath="$PROJECT_DIR$/client.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deploy/database/db/WiredTigerLAS.wt" beforeDir="false" afterPath="$PROJECT_DIR$/deploy/database/db/WiredTigerLAS.wt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deploy/database/db/diagnostic.data/metrics.interim" beforeDir="false" afterPath="$PROJECT_DIR$/deploy/database/db/diagnostic.data/metrics.interim" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deploy/database/db/journal/WiredTigerLog.0000000003" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deploy/database/db/journal/WiredTigerPreplog.0000000001" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deploy/database/db/journal/WiredTigerPreplog.0000000002" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;SugarCube1337&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="7f0cfc4e-6202-4406-a4c6-12ad16cf061a" />
+        <option name="url" value="https://github.com/SugarCube1337/AuthenticationService.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2YlUc8pLsAsiIhtKwkzXDPkNjUx" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/danil/CLionProjects/AuthenticationService&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;CPPToolchains&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\danil\CLionProjects\AuthenticationService" />
+      <recent name="C:\Users\danil\CLionProjects\AuthenticationService\deploy" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\danil\CLionProjects\AuthenticationService\server" />
+      <recent name="C:\Users\danil\CLionProjects\AuthenticationService\utils" />
+      <recent name="C:\Users\danil\CLionProjects\AuthenticationService\cli" />
+      <recent name="C:\Users\danil\CLionProjects\AuthenticationService\database" />
+    </key>
+  </component>
+  <component name="RunManager" selected="CMake Application.AuthenticationServiceClient">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Project" type="CMakeListConfigurationType" factoryName="CMakeListConfigurationFactory" temporary="true">
+      <method v="2" />
+    </configuration>
+    <configuration name="AuthenticationService" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="AuthenticationService" TARGET_NAME="AuthenticationService" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="AuthenticationService" RUN_TARGET_NAME="AuthenticationService">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AuthenticationServiceClient" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="AuthenticationService" TARGET_NAME="AuthenticationServiceClient" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="AuthenticationService" RUN_TARGET_NAME="AuthenticationServiceClient">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="main.c" type="CppFileRunConfiguration" factoryName="CppFileRunConfiguration" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="AuthenticationService" TARGET_NAME="main.c" CONFIG_NAME="main.c">
+      <option name="sourceFile" value="main.c" />
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.runfile.CppFileBuildBeforeRunTaskProvider$BasicBuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="default_target" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/cmake-build-debug/Makefile" target="default_target" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="deploy/mongo.yml: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="sourceFilePath" value="deploy/mongo.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="C/C++ File.main.c" />
+      <item itemvalue="CMake Application.AuthenticationService" />
+      <item itemvalue="CMake Application.AuthenticationServiceClient" />
+      <item itemvalue="CMake Debug.Project" />
+      <item itemvalue="Docker.deploy/mongo.yml: Compose Deployment" />
+      <item itemvalue="Makefile Target.default_target" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Docker.deploy/mongo.yml: Compose Deployment" />
+        <item itemvalue="C/C++ File.main.c" />
+        <item itemvalue="Makefile Target.default_target" />
+        <item itemvalue="CMake Debug.Project" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="18614630-4c5a-46a4-8410-2248a62b0d69" name="Changes" comment="" />
+      <created>1701098051521</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1701098051521</updated>
+      <workItem from="1701098052725" duration="1469000" />
+      <workItem from="1701099740394" duration="5960000" />
+      <workItem from="1701116429201" duration="13000" />
+      <workItem from="1701158572086" duration="137000" />
+      <workItem from="1701284168143" duration="974000" />
+      <workItem from="1701286778053" duration="476000" />
+      <workItem from="1701287266297" duration="37000" />
+      <workItem from="1701287310688" duration="185000" />
+      <workItem from="1701300092674" duration="25000" />
+      <workItem from="1701300203348" duration="50000" />
+      <workItem from="1701547274776" duration="704000" />
+      <workItem from="1701554518635" duration="4363000" />
+      <workItem from="1701618029084" duration="7497000" />
+      <workItem from="1701649895882" duration="4373000" />
+      <workItem from="1701655356954" duration="1000" />
+      <workItem from="1701706720197" duration="168000" />
+      <workItem from="1701944501630" duration="135000" />
+      <workItem from="1702068961044" duration="2728000" />
+      <workItem from="1702143867428" duration="29000" />
+      <workItem from="1702211676586" duration="483000" />
+      <workItem from="1702309764461" duration="7131000" />
+      <workItem from="1702332816161" duration="2264000" />
+      <workItem from="1702397312549" duration="17581000" />
+      <workItem from="1702660913404" duration="1144000" />
+      <workItem from="1703609587725" duration="9033000" />
+      <workItem from="1703645369935" duration="1172000" />
+      <workItem from="1703649564303" duration="6751000" />
+    </task>
+    <task id="LOCAL-00001" summary="add some error logs + &quot;usefull&quot; work for child thread">
+      <option name="closed" value="true" />
+      <created>1701100913456</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1701100913456</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Killing a global variable and initializing threadIdCli before starting a child thread">
+      <option name="closed" value="true" />
+      <created>1701287488756</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1701287488756</updated>
+    </task>
+    <task id="LOCAL-00003" summary="init mutex 'fix'">
+      <option name="closed" value="true" />
+      <created>1701547932440</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1701547932440</updated>
+    </task>
+    <task id="LOCAL-00004" summary="command exit">
+      <option name="closed" value="true" />
+      <created>1701653922442</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1701653922442</updated>
+    </task>
+    <task id="LOCAL-00005" summary="command pattern, help command">
+      <option name="closed" value="true" />
+      <created>1702082763307</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1702082763307</updated>
+    </task>
+    <task id="LOCAL-00006" summary="modularity">
+      <option name="closed" value="true" />
+      <created>1702419880146</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1702419880146</updated>
+    </task>
+    <task id="LOCAL-00007" summary="mongo database add start">
+      <option name="closed" value="true" />
+      <created>1702422135700</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1702422135700</updated>
+    </task>
+    <task id="LOCAL-00008" summary="directories">
+      <option name="closed" value="true" />
+      <created>1702423063638</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1702423063638</updated>
+    </task>
+    <task id="LOCAL-00009" summary="commands update (services)">
+      <option name="closed" value="true" />
+      <created>1702479948591</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1702479948591</updated>
+    </task>
+    <task id="LOCAL-00010" summary="commands update (user). TODO: update">
+      <option name="closed" value="true" />
+      <created>1702493487636</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1702493487636</updated>
+    </task>
+    <task id="LOCAL-00011" summary="update command">
+      <option name="closed" value="true" />
+      <created>1702495554590</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1702495554590</updated>
+    </task>
+    <task id="LOCAL-00012" summary="simple server\client start">
+      <option name="closed" value="true" />
+      <created>1703650620574</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1703650620574</updated>
+    </task>
+    <task id="LOCAL-00013" summary="epoll add">
+      <option name="closed" value="true" />
+      <created>1703679035537</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1703679035537</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VCPKGProject">
+    <isAutomaticEditVcpkgJson value="false" />
+    <isAutomaticCheckingOnLaunch value="false" />
+    <isAutomaticFoundErrors value="true" />
+    <isAutomaticFoundErrors value="true" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="add some error logs + &quot;usefull&quot; work for child thread" />
+    <MESSAGE value="Killing a global variable and initializing threadIdCli before starting a child thread" />
+    <MESSAGE value="init mutex 'fix'" />
+    <MESSAGE value="command exit" />
+    <MESSAGE value="command pattern, help command" />
+    <MESSAGE value="modularity" />
+    <MESSAGE value="mongo database add start" />
+    <MESSAGE value="directories" />
+    <MESSAGE value="commands update (services)" />
+    <MESSAGE value="commands update (user). TODO: update" />
+    <MESSAGE value="update command" />
+    <MESSAGE value="simple server\client start" />
+    <MESSAGE value="epoll add" />
+    <option name="LAST_COMMIT_MESSAGE" value="epoll add" />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="CMakeRunConfiguration">
+        <watch expression="threadData-&gt;mainPid" />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
