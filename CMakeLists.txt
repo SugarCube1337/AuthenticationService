@@ -13,6 +13,12 @@ add_executable(AuthenticationService main.c
         database/database.h
         database/database.c
         database/mongodata.h
+        server/server.h
+        server/handlers_list.c
+        server/header_list.c
+        server/query_list.c
+        server/request.c
+        server/response.c
 )
 
 add_executable(AuthenticationServiceClient client.c)

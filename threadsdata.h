@@ -3,6 +3,7 @@
 
 #include <pthread.h>
 #include "database/mongodata.h"
+#include "server/server.h"
 
 struct ThreadData_s {
     int mainPid;
@@ -10,6 +11,7 @@ struct ThreadData_s {
     pthread_t threadIdCli;
     struct MongoData_s db;
     pthread_t threadIdNet;
+    struct ServerData_s sd;
 };
 
 #endif

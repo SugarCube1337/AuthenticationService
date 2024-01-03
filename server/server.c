@@ -13,8 +13,50 @@
 #define PORT 7777
 #define INSOCK_QUEUE_SIZE 256
 
+// --------- server work logic in handlers
+
+void AskToken(const struct RequestParam_s *request, struct ResponseParam_s *response) {
+
+}
+
+void ValidateToken(const struct RequestParam_s *request, struct ResponseParam_s *response) {
+
+}
+
+// --------- internal server functions
+
+void RegisterMethod(struct ServerData_s *sd, enum HandlerTypes_e type, char *path, serv_func_type f) {
+    AddToHandlersList(sd->handlres, type, path, f);
+}
+
+void RunMethod(struct ServerData_s *sd, const char *request, char *response) {
+    struct RequestParam_s *rq = ParseParams(request);
+    struct ResponseParam_s *rs = CreateEmptyResp();
+
+    serv_func_type f = LookUpHandler(sd->handlres, rq->type, rq->path);
+
+    if (f == NULL) { // no registered method? or t is UNSUPPORTED? or p is unknown?
+        rs->status = BAD_REQUEST;
+    } else {
+        f(rq, rs); // else run registered method
+    }
+
+    ConstructStrResp(rs, response);
+    ReleaseResp(rs);
+    ReleaseReq(rq);
+}
+
 void *NetInterface (void *arg) {
     struct ThreadData_s *threadData = (struct ThreadData_s*)arg;
+
+    threadData->sd.handlres = CreateHandlersList();
+    if (threadData->sd.handlres == NULL) {
+        printf("CreateHandlersList() error\n");
+        kill(threadData->mainPid, SIGUSR1);
+        pthread_exit(threadData);
+    }
+    RegisterMethod(&threadData->sd, GET, "/token", AskToken);
+    RegisterMethod(&threadData->sd, POST, "/validate", ValidateToken);
 
     int listfd = 0;
     int connfd = 0;
@@ -72,7 +114,7 @@ void *NetInterface (void *arg) {
     }
 
     struct epoll_event ev;
-    ev.events = EPOLLIN/* | EPOLLPRI*/;
+    ev.events = EPOLLIN;
     ev.data.fd = listfd;
 
     // add event settings to epoll
@@ -84,11 +126,8 @@ void *NetInterface (void *arg) {
     struct epoll_event detectedEvent;
     memset((void *)&detectedEvent, 0, sizeof(struct epoll_event));
 
-    char recBuf[1024];
-    memset(recBuf, 0, sizeof(recBuf));
-
-    char sendBuf[1024 + 16];
-    memset(sendBuf, 0, sizeof(sendBuf));
+    char recBuf[MAX_REQUEST_SIZE];
+    char sendBuf[MAX_RESPONSE_SIZE];
 
     while (!NeedQuit(&threadData->stopper)) {
         int te = 0; // triggered event
@@ -104,6 +143,8 @@ void *NetInterface (void *arg) {
             struct epoll_event *event = &detectedEvent + te;
 
             if (event->data.fd == listfd) { // new connection
+                memset(recBuf, 0, sizeof(recBuf));
+                memset(sendBuf, 0, sizeof(sendBuf));
 
                 connfd = accept(listfd, NULL, NULL);
                 if(connfd == -1) {
@@ -120,11 +161,7 @@ void *NetInterface (void *arg) {
                 snprintf(sendBuf, sizeof(sendBuf), "server got msg: %s\n", recBuf);
                 printf("%s", sendBuf);
 
-                if (memcmp(recBuf, "exit", 4) == 0) {
-                    kill(threadData->mainPid, SIGUSR1);
-                    close(connfd);
-                    break;
-                }
+                RunMethod(&threadData->sd, recBuf, sendBuf);
 
                 n = write(connfd, sendBuf, strlen(sendBuf));
                 if (n == -1) {
@@ -141,6 +178,8 @@ void *NetInterface (void *arg) {
     } // while !NeedQuit()
 
     printf("stop child thread\n");
+
     close(listfd);
+    FreeHandlersList(threadData->sd.handlres);
     pthread_exit(threadData);
 }
