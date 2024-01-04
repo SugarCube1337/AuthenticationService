@@ -3,6 +3,23 @@ project(AuthenticationService C)
 
 set(CMAKE_C_STANDARD 11)
 
+SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-modules/" ${CMAKE_MODULE_PATH})
+
+FIND_PACKAGE(OPENSSL REQUIRED)
+IF(NOT OPENSSL_FOUND)
+    MESSAGE(FATAL_ERROR
+            "OpenSSL is not found!")
+ENDIF()
+SET(OPENSSL_INCLUDES ${OPENSSL_INCLUDE_DIRS})
+SET(OPENSSL_LIBRARIES ${OPENSSL_LIBRARIES})
+
+find_package(CJSON REQUIRED)
+if(NOT CJSON_FOUND)
+    message(FATAL_ERROR
+            "cJSON are not found!")
+endif()
+
+
 find_package(mongoc-1.0 1.7 REQUIRED)
 add_executable(AuthenticationService main.c
         threadsdata.h
@@ -19,12 +36,20 @@ add_executable(AuthenticationService main.c
         server/query_list.c
         server/request.c
         server/response.c
+        sha/sha.h
+        sha/sha.c
+        sha/test_sha2.c
 )
 
 add_executable(AuthenticationServiceClient client.c)
 
 
 target_link_libraries(AuthenticationService PRIVATE mongo::mongoc_shared)
+
+add_executable(test_sha sha/test_sha2.c sha/sha.c)
+
+target_link_libraries(test_sha ${OPENSSL_LIBRARIES})
+
 
 
 
