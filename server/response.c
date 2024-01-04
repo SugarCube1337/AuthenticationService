@@ -33,12 +33,12 @@ void ConstructStrResp(struct ResponseParam_s *rs, char *response) {
     char *r = strdup("HTTP/1.0 "); // create local heap copy of constant string
 
     if (rs->status == 0) {
-        asprintf(&r, "%d ", INTERNAL_SERVER_ERROR);
+        asprintf(&r,"%s %d ", r,  INTERNAL_SERVER_ERROR);
         asprintf(&r, "%s %s\r\n\r\n", r, GetStatusMessage(INTERNAL_SERVER_ERROR));
         strncpy(response, r, MAX_RESPONSE_SIZE);
 
     } else {
-        asprintf(&r, "%d ", rs->status);
+        asprintf(&r, "%s %d ", r,  rs->status);
         asprintf(&r, "%s %s\r\n", r, GetStatusMessage(rs->status));
         if (rs->contentType != NULL) {
             asprintf(&r, "%sContent-Type: %s\r\n", r, rs->contentType);

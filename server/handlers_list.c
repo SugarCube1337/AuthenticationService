@@ -49,8 +49,10 @@ serv_func_type LookUpHandler(struct HandlersList *data, enum HandlerTypes_e type
     struct HandlersListItem *item;
     for (item = data->list; item != NULL; item = item->next) {
         if (type == item->type) {
-            if (strncmp(path, item->path, strlen(item->path)) == 0) {
-                return item->f; /* found! */
+            if (strlen(path) == strlen(item->path)) {
+                if (strncmp(path, item->path, strlen(item->path)) == 0) {
+                    return item->f; /* found! */
+                }
             }
         }
     }

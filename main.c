@@ -9,7 +9,7 @@
 #include "cli/cli.h"
 #include "database/database.h"
 #include "threadsdata.h"
-#include "server/server.c"
+#include "server/server.h"
 
 // Main thread
 
