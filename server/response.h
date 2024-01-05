@@ -1,5 +1,5 @@
-#ifndef TEST_JWT_GENERATE_RESPONSE_H
-#define TEST_JWT_GENERATE_RESPONSE_H
+#ifndef AuthenticationService_RESPONSE_H
+#define AuthenticationService_RESPONSE_H
 
 #include <stdlib.h>
 #include <string.h>
@@ -8,18 +8,21 @@
 
 #define OK 200
 #define BAD_REQUEST 400
+#define FORBIDDEN 401
 #define INTERNAL_SERVER_ERROR 500
 
 struct ResponseParam_s {
     int status;
     char *contentType;
     char *body;
-    // other
+    // other params
 };
 
 struct ResponseParam_s *CreateEmptyResp();
 void ReleaseResp(struct ResponseParam_s *rs);
 
+void SetContentType(struct ResponseParam_s *rs, const char *contentType);
 void ConstructStrResp(struct ResponseParam_s *rs, char *response);
 
 #endif
+

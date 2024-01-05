@@ -29,9 +29,8 @@ int main(int argc, char *argv[]) {
     // my realization
     struct Sha256_s md;
     Sha256Init(&md);
-    Sha256Process(Sha256Compress_v1, &md, pass, strlen(pass));
-    Sha256Final(Sha256Compress_v1, &md, resultMy);
-
+    Sha256Process(&md, pass, strlen(pass));
+    Sha256Final(&md, resultMy);
 
     int i;
     for (i = 0; i < sha2.md_len; i++) {
@@ -40,10 +39,6 @@ int main(int argc, char *argv[]) {
     printf("\n");
     for (i = 0; i < sha2.md_len; i++) {
         printf("0x%02x ", resultMy[i]);
-    }
-    printf("\n");
-    for (i = 0; i < sha2.md_len; i++) {
-        printf("0x%02x ", resultExercize[i]);
     }
     printf("\n");
 
@@ -86,15 +81,14 @@ void bench2() {
 
     struct Sha256_s md;
     Sha256Init(&md);
-    Sha256Process(Sha256Compress_v1, &md, pass, strlen(pass));
-    Sha256Final(Sha256Compress_v1, &md, result);
+    Sha256Process(&md, pass, strlen(pass));
+    Sha256Final(&md, result);
 
     clock_t start_time = clock();
     for (i = 0; i < N; i++) {
-        Sha256Process(Sha256Compress_v1, &md, result, sizeof(result));
+        Sha256Process(&md, result, sizeof(result));
     }
-    Sha256Final(Sha256Compress_v1, &md, result);
+    Sha256Final(&md, result);
     double testResult = (double) N * 32 / (clock() - start_time) * CLOCKS_PER_SEC / 1048576;
     printf("\tSpeed: %.1f MiB/s\n", testResult);
 }
-

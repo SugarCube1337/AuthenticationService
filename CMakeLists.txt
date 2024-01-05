@@ -39,19 +39,32 @@ add_executable(AuthenticationService main.c
         sha/sha.h
         sha/sha.c
         sha/test_sha2.c
+        hmac/hmac_sha2.h
+        hmac/hmac_sha2.c
+        hmac/test_hmac.c
+        server/base64.c
+        server/base64.c
+        server/base64.c
+        server/base64.c
+        server/jwt.h
+        server/jwt.c
+        server/server.c
 )
+target_link_libraries(AuthenticationService ${CMAKE_THREAD_LIBS_INIT} ${CJSON_LIBRARY} ${OPENSSL_LIBRARIES})
+
 
 add_executable(AuthenticationServiceClient client.c)
+target_link_libraries(AuthenticationServiceClient ${OPENSSL_LIBRARIES})
 
 
-target_link_libraries(AuthenticationService PRIVATE mongo::mongoc_shared)
 
 add_executable(test_sha sha/test_sha2.c sha/sha.c)
 
 target_link_libraries(test_sha ${OPENSSL_LIBRARIES})
 
+add_executable(test_hmac hmac/test_hmac.c hmac/hmac_sha2.c hmac/hmac_sha2.h sha/sha.c)
 
-
+target_link_libraries(test_hmac ${OPENSSL_LIBRARIES})
 
 
 

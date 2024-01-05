@@ -15,7 +15,7 @@ static inline void pack32to8_be(void *dst, uint32_t val) {
 }
 
 void Sha256Init(struct Sha256_s *md) {
-    md->state[0] = 0x6a09e667;\
+    md->state[0] = 0x6a09e667;
     md->state[1] = 0xbb67ae85;
     md->state[2] = 0x3c6ef372;
     md->state[3] = 0xa54ff53a;
@@ -28,100 +28,64 @@ void Sha256Init(struct Sha256_s *md) {
     md->addedW = 0;
 }
 
-void Sha256Compress_v1(struct Sha256_s *md) {
-    uint32_t v0, v1, v2, v3, v4, v5, v6, v7;
-    uint32_t W[16];
+void Sha256Compress(struct Sha256_s *md) {
+    uint32_t W[64];
+    uint32_t a,b,c,d,e,f,g,h;
+    uint32_t t, t0, t1;
+    int i;
 
-    v0 = md->state[0]; v1 = md->state[1];
-    v2 = md->state[2]; v3 = md->state[3];
-    v4 = md->state[4]; v5 = md->state[5];
-    v6 = md->state[6]; v7 = md->state[7];
-
-    for (int i = 0; i < 16; i++) {
+    /* load W[0..15] */
+    for (i = 0; i < 16; i++) {
         W[i] = pack8to32_be(md->w + 4 * i);
     }
 
-    one_cycle(0, 1, 2, 3, 4, 5, 6, 7, k256[0], w00);
-    one_cycle(7, 0, 1, 2, 3, 4, 5, 6, k256[1], w01);
-    one_cycle(6, 7, 0, 1, 2, 3, 4, 5, k256[2], w02);
-    one_cycle(5, 6, 7, 0, 1, 2, 3, 4, k256[3], w03);
-    one_cycle(4, 5, 6, 7, 0, 1, 2, 3, k256[4], w04);
-    one_cycle(3, 4, 5, 6, 7, 0, 1, 2, k256[5], w05);
-    one_cycle(2, 3, 4, 5, 6, 7, 0, 1, k256[6], w06);
-    one_cycle(1, 2, 3, 4, 5, 6, 7, 0, k256[7], w07);
-    one_cycle(0, 1, 2, 3, 4, 5, 6, 7, k256[8], w08);
-    one_cycle(7, 0, 1, 2, 3, 4, 5, 6, k256[9], w09);
-    one_cycle(6, 7, 0, 1, 2, 3, 4, 5, k256[10], w10);
-    one_cycle(5, 6, 7, 0, 1, 2, 3, 4, k256[11], w11);
-    one_cycle(4, 5, 6, 7, 0, 1, 2, 3, k256[12], w12);
-    one_cycle(3, 4, 5, 6, 7, 0, 1, 2, k256[13], w13);
-    one_cycle(2, 3, 4, 5, 6, 7, 0, 1, k256[14], w14);
-    one_cycle(1, 2, 3, 4, 5, 6, 7, 0, k256[15], w15);
+    /* compute W[16..63] */
+    for (i = 16; i < 64; i++) {
+        W[i] = gamma1(W[i-2]) + W[i-7] + gamma0(W[i-15]) + W[i-16];
+    }
 
-    one_cycle(0, 1, 2, 3, 4, 5, 6, 7, k256[16], hf00);
-    one_cycle(7, 0, 1, 2, 3, 4, 5, 6, k256[17], hf01);
-    one_cycle(6, 7, 0, 1, 2, 3, 4, 5, k256[18], hf02);
-    one_cycle(5, 6, 7, 0, 1, 2, 3, 4, k256[19], hf03);
-    one_cycle(4, 5, 6, 7, 0, 1, 2, 3, k256[20], hf04);
-    one_cycle(3, 4, 5, 6, 7, 0, 1, 2, k256[21], hf05);
-    one_cycle(2, 3, 4, 5, 6, 7, 0, 1, k256[22], hf06);
-    one_cycle(1, 2, 3, 4, 5, 6, 7, 0, k256[23], hf07);
-    one_cycle(0, 1, 2, 3, 4, 5, 6, 7, k256[24], hf08);
-    one_cycle(7, 0, 1, 2, 3, 4, 5, 6, k256[25], hf09);
-    one_cycle(6, 7, 0, 1, 2, 3, 4, 5, k256[26], hf10);
-    one_cycle(5, 6, 7, 0, 1, 2, 3, 4, k256[27], hf11);
-    one_cycle(4, 5, 6, 7, 0, 1, 2, 3, k256[28], hf12);
-    one_cycle(3, 4, 5, 6, 7, 0, 1, 2, k256[29], hf13);
-    one_cycle(2, 3, 4, 5, 6, 7, 0, 1, k256[30], hf14);
-    one_cycle(1, 2, 3, 4, 5, 6, 7, 0, k256[31], hf15);
+    /* load a copy of the state */
+    a = md->state[0];
+    b = md->state[1];
+    c = md->state[2];
+    d = md->state[3];
+    e = md->state[4];
+    f = md->state[5];
+    g = md->state[6];
+    h = md->state[7];
 
-    one_cycle(0, 1, 2, 3, 4, 5, 6, 7, k256[32], hf00);
-    one_cycle(7, 0, 1, 2, 3, 4, 5, 6, k256[33], hf01);
-    one_cycle(6, 7, 0, 1, 2, 3, 4, 5, k256[34], hf02);
-    one_cycle(5, 6, 7, 0, 1, 2, 3, 4, k256[35], hf03);
-    one_cycle(4, 5, 6, 7, 0, 1, 2, 3, k256[36], hf04);
-    one_cycle(3, 4, 5, 6, 7, 0, 1, 2, k256[37], hf05);
-    one_cycle(2, 3, 4, 5, 6, 7, 0, 1, k256[38], hf06);
-    one_cycle(1, 2, 3, 4, 5, 6, 7, 0, k256[39], hf07);
-    one_cycle(0, 1, 2, 3, 4, 5, 6, 7, k256[40], hf08);
-    one_cycle(7, 0, 1, 2, 3, 4, 5, 6, k256[41], hf09);
-    one_cycle(6, 7, 0, 1, 2, 3, 4, 5, k256[42], hf10);
-    one_cycle(5, 6, 7, 0, 1, 2, 3, 4, k256[43], hf11);
-    one_cycle(4, 5, 6, 7, 0, 1, 2, 3, k256[44], hf12);
-    one_cycle(3, 4, 5, 6, 7, 0, 1, 2, k256[45], hf13);
-    one_cycle(2, 3, 4, 5, 6, 7, 0, 1, k256[46], hf14);
-    one_cycle(1, 2, 3, 4, 5, 6, 7, 0, k256[47], hf15);
+    /* 64 rounds */
+    for (i = 0; i < 64; i++) {
+        /* compute */
+        t0 = h + sigma1(e) + ch(e, f, g) + k256[i] + W[i];
+        t1 = sigma0(a) + maj(a,b,c);
+        d += t0;
+        h = t0 + t1;
 
-    one_cycle(0, 1, 2, 3, 4, 5, 6, 7, k256[48], hf00);
-    one_cycle(7, 0, 1, 2, 3, 4, 5, 6, k256[49], hf01);
-    one_cycle(6, 7, 0, 1, 2, 3, 4, 5, k256[50], hf02);
-    one_cycle(5, 6, 7, 0, 1, 2, 3, 4, k256[51], hf03);
-    one_cycle(4, 5, 6, 7, 0, 1, 2, 3, k256[52], hf04);
-    one_cycle(3, 4, 5, 6, 7, 0, 1, 2, k256[53], hf05);
-    one_cycle(2, 3, 4, 5, 6, 7, 0, 1, k256[54], hf06);
-    one_cycle(1, 2, 3, 4, 5, 6, 7, 0, k256[55], hf07);
-    one_cycle(0, 1, 2, 3, 4, 5, 6, 7, k256[56], hf08);
-    one_cycle(7, 0, 1, 2, 3, 4, 5, 6, k256[57], hf09);
-    one_cycle(6, 7, 0, 1, 2, 3, 4, 5, k256[58], hf10);
-    one_cycle(5, 6, 7, 0, 1, 2, 3, 4, k256[59], hf11);
-    one_cycle(4, 5, 6, 7, 0, 1, 2, 3, k256[60], hf12);
-    one_cycle(3, 4, 5, 6, 7, 0, 1, 2, k256[61], hf13);
-    one_cycle(2, 3, 4, 5, 6, 7, 0, 1, k256[62], hf14);
-    one_cycle(1, 2, 3, 4, 5, 6, 7, 0, k256[63], hf15);
+        /* swap */
+        t = h;
+        h = g;
+        g = f;
+        f = e;
+        e = d;
+        d = c;
+        c = b;
+        b = a;
+        a = t;
+    }
 
-    md->state[0] += v0;
-    md->state[1] += v1;
-    md->state[2] += v2;
-    md->state[3] += v3;
-    md->state[4] += v4;
-    md->state[5] += v5;
-    md->state[6] += v6;
-    md->state[7] += v7;
+    /* update md state */
+    md->state[0] += a;
+    md->state[1] += b;
+    md->state[2] += c;
+    md->state[3] += d;
+    md->state[4] += e;
+    md->state[5] += f;
+    md->state[6] += g;
+    md->state[7] += h;
 }
 
-
-
-void Sha256Process(compress_func_type f, struct Sha256_s *md, const unsigned char *input, int inputLen) {
+void Sha256Process(struct Sha256_s *md, const unsigned char *input, int inputLen) {
     int loadingInput;
     while (inputLen) {
         loadingInput = (64 - md->addedW) < inputLen ? 64 - md->addedW : inputLen;
@@ -135,14 +99,14 @@ void Sha256Process(compress_func_type f, struct Sha256_s *md, const unsigned cha
 
         /* if we have a full MD block, transform it */
         if (md->addedW == 64) {
-            f(md);
+            Sha256Compress(md);
             md->addedW = 0;
             md->msgLen += 64;
         }
     }
 }
 
-void Sha256Final(compress_func_type f, struct Sha256_s *md, unsigned char *output) {
+void Sha256Final(struct Sha256_s *md, unsigned char *output) {
     uint32_t l1, l2, i;
 
     /* compute final length in bits (eq md->msgLen*8) */
@@ -160,7 +124,7 @@ void Sha256Final(compress_func_type f, struct Sha256_s *md, unsigned char *outpu
             md->w[md->addedW] = 0x00;
             md->addedW++;
         }
-        f(md);
+        Sha256Compress(md);
         md->addedW = 0;
     }
 
@@ -175,7 +139,7 @@ void Sha256Final(compress_func_type f, struct Sha256_s *md, unsigned char *outpu
     pack32to8_be(md->w+60, l1);
 
     /* last compress */
-    f(md);
+    Sha256Compress(md);
 
     /* save result hash */
     for (i = 0; i < 8; i++) {

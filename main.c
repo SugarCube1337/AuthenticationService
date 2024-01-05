@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
+#include <openssl/ssl.h>
 #include "cli/cli.h"
 #include "database/database.h"
 #include "threadsdata.h"
@@ -57,11 +58,18 @@ void DestroyWorkThreads(struct ThreadData_s *threadData) {
 
 }
 
+void InitOpenSslLib() {
+    SSL_library_init();
+    SSL_load_error_strings();
+}
+
 int main() {
     struct ThreadData_s threadData;
     threadData.mainPid = getpid();
     sigset_t sigset;
     int signo, status;
+
+    InitOpenSslLib();
 
     status = InitDb(&threadData);
     if (status == 0) {
@@ -72,6 +80,7 @@ int main() {
     sigaddset(&sigset, SIGQUIT);
     sigaddset(&sigset, SIGINT);
     sigaddset(&sigset, SIGTERM);
+    sigaddset(&sigset, SIGCHLD);
     sigaddset(&sigset, SIGUSR1);
 
     sigprocmask(SIG_BLOCK, &sigset, NULL);

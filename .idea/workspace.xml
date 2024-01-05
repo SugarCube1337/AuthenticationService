@@ -12,6 +12,7 @@
   <component name="CMakeRunConfigurationManager">
     <generated>
       <config projectName="AuthenticationService" targetName="AuthenticationService" />
+      <config projectName="AuthenticationService" targetName="test_sha" />
       <config projectName="AuthenticationService" targetName="AuthenticationServiceClient" />
     </generated>
   </component>
@@ -21,8 +22,18 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="18614630-4c5a-46a4-8410-2248a62b0d69" name="Changes" comment="server update (params parser &amp; handlers, query_list, get\post response\request)">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="18614630-4c5a-46a4-8410-2248a62b0d69" name="Changes" comment="sha update">
+      <change afterPath="$PROJECT_DIR$/deploy/clean_old_server_keys.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deploy/gen_server_keys.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hmac/hmac_sha2.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hmac/hmac_sha2.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hmac/test_hmac.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client.c" beforeDir="false" afterPath="$PROJECT_DIR$/client.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/main.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sha/sha.c" beforeDir="false" afterPath="$PROJECT_DIR$/sha/sha.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sha/sha.h" beforeDir="false" afterPath="$PROJECT_DIR$/sha/sha.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sha/test_sha2.c" beforeDir="false" afterPath="$PROJECT_DIR$/sha/test_sha2.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,37 +93,38 @@
     "cidr.known.project.marker": "true",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/danil/CLionProjects/AuthenticationService/server",
+    "last_opened_file_path": "C:/Users/danil/CLionProjects/AuthenticationService/deploy",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "CPPToolchains",
+    "structure.view.defaults.are.configured": "true",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\danil\CLionProjects\AuthenticationService\server" />
-      <recent name="C:\Users\danil\CLionProjects\AuthenticationService" />
       <recent name="C:\Users\danil\CLionProjects\AuthenticationService\deploy" />
+      <recent name="C:\Users\danil\CLionProjects\AuthenticationService\cmake-modules" />
+      <recent name="C:\Users\danil\CLionProjects\AuthenticationService\sha" />
+      <recent name="C:\Users\danil\CLionProjects\AuthenticationService" />
+      <recent name="C:\Users\danil\CLionProjects\AuthenticationService\server" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\danil\CLionProjects\AuthenticationService\sha" />
       <recent name="C:\Users\danil\CLionProjects\AuthenticationService\server" />
       <recent name="C:\Users\danil\CLionProjects\AuthenticationService\utils" />
       <recent name="C:\Users\danil\CLionProjects\AuthenticationService\cli" />
       <recent name="C:\Users\danil\CLionProjects\AuthenticationService\database" />
     </key>
   </component>
-  <component name="RunManager" selected="CMake Application.AuthenticationServiceClient">
+  <component name="RunManager" selected="CMake Application.test_sha">
     <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="CLION.EXTERNAL.BUILD" enabled="true" />
       </method>
-    </configuration>
-    <configuration name="Project" type="CMakeListConfigurationType" factoryName="CMakeListConfigurationFactory" temporary="true">
-      <method v="2" />
     </configuration>
     <configuration name="AuthenticationService" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="AuthenticationService" TARGET_NAME="AuthenticationService" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="AuthenticationService" RUN_TARGET_NAME="AuthenticationService">
       <method v="2">
@@ -124,11 +136,28 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="test_sha" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="AuthenticationService" TARGET_NAME="test_sha" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="AuthenticationService" RUN_TARGET_NAME="test_sha">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="main.c" type="CppFileRunConfiguration" factoryName="CppFileRunConfiguration" temporary="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="AuthenticationService" TARGET_NAME="main.c" CONFIG_NAME="main.c">
       <option name="sourceFile" value="main.c" />
       <method v="2">
         <option name="com.jetbrains.cidr.cpp.runfile.CppFileBuildBeforeRunTaskProvider$BasicBuildBeforeRunTask" enabled="true" />
       </method>
+    </configuration>
+    <configuration name="AuthenticationService" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/build/Makefile" target="AuthenticationService" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <configuration name="AuthenticationService/fast" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/build/Makefile" target="AuthenticationService/fast" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
     </configuration>
     <configuration name="default_target" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
       <makefile filename="$PROJECT_DIR$/cmake-build-debug/Makefile" target="default_target" workingDirectory="" arguments="">
@@ -154,16 +183,19 @@
       <item itemvalue="C/C++ File.main.c" />
       <item itemvalue="CMake Application.AuthenticationService" />
       <item itemvalue="CMake Application.AuthenticationServiceClient" />
-      <item itemvalue="CMake Debug.Project" />
+      <item itemvalue="CMake Application.test_sha" />
       <item itemvalue="Docker.deploy/mongo.yml: Compose Deployment" />
+      <item itemvalue="Makefile Target.AuthenticationService" />
+      <item itemvalue="Makefile Target.AuthenticationService/fast" />
       <item itemvalue="Makefile Target.default_target" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Makefile Target.AuthenticationService/fast" />
+        <item itemvalue="Makefile Target.AuthenticationService" />
         <item itemvalue="Docker.deploy/mongo.yml: Compose Deployment" />
         <item itemvalue="C/C++ File.main.c" />
         <item itemvalue="Makefile Target.default_target" />
-        <item itemvalue="CMake Debug.Project" />
       </list>
     </recent_temporary>
   </component>
@@ -203,7 +235,7 @@
       <workItem from="1703645369935" duration="1172000" />
       <workItem from="1703649564303" duration="6948000" />
       <workItem from="1703700396596" duration="912000" />
-      <workItem from="1704305837837" duration="2838000" />
+      <workItem from="1704305837837" duration="10734000" />
     </task>
     <task id="LOCAL-00001" summary="add some error logs + &quot;usefull&quot; work for child thread">
       <option name="closed" value="true" />
@@ -325,7 +357,23 @@
       <option name="project" value="LOCAL" />
       <updated>1704315130941</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="server fix">
+      <option name="closed" value="true" />
+      <created>1704387945535</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1704387945535</updated>
+    </task>
+    <task id="LOCAL-00017" summary="sha (openSSL+mine+test)">
+      <option name="closed" value="true" />
+      <created>1704404179956</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1704404179956</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -365,7 +413,9 @@
     <MESSAGE value="epoll add" />
     <MESSAGE value="gitignore add/client fix" />
     <MESSAGE value="server update (params parser &amp; handlers, query_list, get\post response\request)" />
-    <option name="LAST_COMMIT_MESSAGE" value="server update (params parser &amp; handlers, query_list, get\post response\request)" />
+    <MESSAGE value="server fix" />
+    <MESSAGE value="sha (openSSL+mine+test)" />
+    <option name="LAST_COMMIT_MESSAGE" value="sha (openSSL+mine+test)" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
