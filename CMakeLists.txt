@@ -6,21 +6,21 @@ set(CMAKE_C_STANDARD 11)
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake-modules/" ${CMAKE_MODULE_PATH})
 
 FIND_PACKAGE(OPENSSL REQUIRED)
-IF(NOT OPENSSL_FOUND)
+IF (NOT OPENSSL_FOUND)
     MESSAGE(FATAL_ERROR
             "OpenSSL is not found!")
-ENDIF()
+ENDIF ()
 SET(OPENSSL_INCLUDES ${OPENSSL_INCLUDE_DIRS})
 SET(OPENSSL_LIBRARIES ${OPENSSL_LIBRARIES})
 
 find_package(CJSON REQUIRED)
-if(NOT CJSON_FOUND)
+if (NOT CJSON_FOUND)
     message(FATAL_ERROR
             "cJSON are not found!")
-endif()
+endif ()
 
-
-find_package(mongoc-1.0 1.7 REQUIRED)
+include_directories("/usr/include/libmongoc-1.0")
+include_directories("/usr/include/libbson-1.0")
 add_executable(AuthenticationService main.c
         threadsdata.h
         cli/cli.h
@@ -50,20 +50,23 @@ add_executable(AuthenticationService main.c
         server/jwt.c
         server/server.c
 )
-target_link_libraries(AuthenticationService ${CMAKE_THREAD_LIBS_INIT} ${CJSON_LIBRARY} ${OPENSSL_LIBRARIES})
-
+target_link_libraries(AuthenticationService
+        ${OPENSSL_LIBRARIES}
+        ${CJSON_LIBRARY}
+        ${CMAKE_THREAD_LIBS_INIT}
+        /usr/lib/x86_64-linux-gnu/libmongoc-1.0.so
+        /usr/lib/x86_64-linux-gnu/libbson-1.0.so
+)
 
 add_executable(AuthenticationServiceClient client.c)
-target_link_libraries(AuthenticationServiceClient ${OPENSSL_LIBRARIES})
-
-
+target_link_libraries(AuthenticationServiceClient
+        ${OPENSSL_LIBRARIES}
+)
 
 add_executable(test_sha sha/test_sha2.c sha/sha.c)
-
 target_link_libraries(test_sha ${OPENSSL_LIBRARIES})
 
-add_executable(test_hmac hmac/test_hmac.c hmac/hmac_sha2.c hmac/hmac_sha2.h sha/sha.c)
-
+add_executable(test_hmac hmac/test_hmac.c hmac/hmac_sha2.c sha/sha.c)
 target_link_libraries(test_hmac ${OPENSSL_LIBRARIES})
 
 
