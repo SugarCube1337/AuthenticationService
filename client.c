@@ -124,14 +124,14 @@ int main(int argc, char *argv[]) {
     InitOpenSslLib();
 
     char servAddr[] = "127.0.0.1";
-    AskServer(servAddr, "GET /token?name=1337 HTTP/1.0\r\n\r\n"); // in norm app query_string should contain other user's identification, for example hash from pass
+    AskServer(servAddr, "GET /token?name=kisa HTTP/1.0\r\n\r\n"); // in norm app query_string should contain other user's identification, for example hash from pass
     printf("\n-------------------------\n");
     AskServer(servAddr, "POST /validate HTTP/1.0\r\n"
                         "Host: somebackend\r\n"
                         "Content-Type: plain/text\r\n"
                         "Content-Length: 186\r\n"
                         "\r\n"
-                        "eyJhbGciOiAiSFMyNTYiIjogIkpXVCJ9.Bg==.9x17rwCPdVPAeBSEzOxQhn1rGQN13epRJLk2/qGSFUQ==\r\n\r\n");
+                        "eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyAiX2lkIiA6IHsgIiRvaWQiIDogIjY1OTk2NjhiZjRjZDVjZmYwMjAwZWFhMSIgfSwgInVzZXJuYW1lIiA6ICJraXNhIiB9.BW3Ui31CFxDtfVaLKE1Fp20wmiY1JAMQfkT79V/X5hc=\r\n\r\n");
     printf("\n-------------------------\n");
     return 0;
 }

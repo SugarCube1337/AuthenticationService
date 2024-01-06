@@ -35,30 +35,32 @@ void AskToken(const struct RequestParam_s *request, struct ResponseParam_s *resp
                 db->collUser, query, NULL, NULL
         );
 
-        const bson_t *dbRes;
+        bson_t *dbRes;
 
         if (mongoc_cursor_next(cursor, &dbRes)) {
             char *str = bson_as_canonical_extended_json(dbRes, NULL);
             printf("%s\n", str);
+
+            // 2. jwt
+
+            struct Jwt_s *jwt = CreateJwt(jwtKey, strlen(jwtKey));
+            AddJsonAsPayload(jwt, str);
+
+            response->body = ConstructJwt(jwt);
+            if (response->body == NULL) {
+                response->status = INTERNAL_SERVER_ERROR;
+            } else {
+                SetContentType(response, "plain/text");
+                response->status = OK;
+            }
+
+            ReleaseJwt(jwt);
             bson_free(str);
-        }
-
-        // 2. jwt
-
-        struct Jwt_s *jwt = CreateJwt(jwtKey, strlen(jwtKey));
-        AddJsonAsPayload(jwt, dbRes);
-
-        response->body = ConstructJwt(jwt);
-        if (response->body == NULL) {
-            response->status = INTERNAL_SERVER_ERROR;
         } else {
-            SetContentType(response, "plain/text");
-            response->status = OK;
+            response->status = BAD_REQUEST;
         }
-
-        ReleaseJwt(jwt);
-        bson_destroy(query);
         mongoc_cursor_destroy(cursor);
+        bson_destroy(query);
     } else {
         response->status = BAD_REQUEST;
     }
@@ -141,8 +143,9 @@ void ValidateToken(const struct RequestParam_s *request, struct ResponseParam_s 
     char *str = bson_as_canonical_extended_json(dbRes, NULL);
     printf("%s\n", str);
     bson_free(str);
+
     // 5. compare DB result and token value
-    if (strcmp(decodedPayload, dbRes) != 0) {
+    if (strcmp(decodedPayload, str) != 0) {
         cJSON_Delete(payloadJson);
         free(decodedPayload);
         free(localBody);

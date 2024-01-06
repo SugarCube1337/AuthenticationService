@@ -8,7 +8,7 @@ int InputAvailable();
 #define SET_WORK_TIMEOUT \
     struct timespec ts; \
     ts.tv_sec = 0; \
-    ts.tv_nsec = 100000000 / 4;
+    ts.tv_nsec = 1000000 ;
 
 #define WORK_TIMEOUT \
     nanosleep(&ts, NULL);
