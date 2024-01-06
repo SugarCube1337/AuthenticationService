@@ -142,7 +142,7 @@ void ValidateToken(const struct RequestParam_s *request, struct ResponseParam_s 
 
     char *str = bson_as_canonical_extended_json(dbRes, NULL);
     printf("%s\n", str);
-    bson_free(str);
+
 
     // 5. compare DB result and token value
     if (strcmp(decodedPayload, str) != 0) {
@@ -153,7 +153,7 @@ void ValidateToken(const struct RequestParam_s *request, struct ResponseParam_s 
         response->status = FORBIDDEN;
         return;
     }
-
+    bson_free(str);
     cJSON_Delete(payloadJson);
     free(decodedPayload);
     free(localBody);
