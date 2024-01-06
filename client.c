@@ -47,7 +47,7 @@ int AskServer(const char *serverAddr, const char *msg) {
 
         /* Create a TLS client context with a CA certificate */
         ctx = SSL_CTX_new(TLS_client_method());
-        SSL_CTX_use_certificate_file(ctx, "../deploy/ca-cert.pem", SSL_FILETYPE_PEM);
+        SSL_CTX_use_certificate_file(ctx, "../server_keys/ca-cert.pem", SSL_FILETYPE_PEM);
 
         int sock = CreateSocket();
         if (sock == -1) {

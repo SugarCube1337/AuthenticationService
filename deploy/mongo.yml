@@ -1,17 +1,17 @@
-# docker-compose.yml
 version: "3.4"
 services:
   mongo:
     image: mongo:4.2
     container_name: mongo
     environment:
-        - MONGO_INITDB_ROOT_USERNAME=root
-        - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
     restart: unless-stopped
     ports:
       - "27017:27017"
     volumes:
       - ./database/db:/data/db
+
   mongo-express:
     image: mongo-express
     container_name: mexpress

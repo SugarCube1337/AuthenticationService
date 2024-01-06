@@ -1,5 +1,5 @@
-#ifndef TEST_JWT_GENERATE_SERVER_H
-#define TEST_JWT_GENERATE_SERVER_H
+#ifndef AuthenticationService_SERVER_H
+#define AuthenticationService_SERVER_H
 
 #define PORT 7777
 #define INSOCK_QUEUE_SIZE 256

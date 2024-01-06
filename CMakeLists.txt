@@ -18,9 +18,8 @@ if (NOT CJSON_FOUND)
     message(FATAL_ERROR
             "cJSON are not found!")
 endif ()
+find_package(mongoc-1.0 1.7 REQUIRED)
 
-include_directories("/usr/include/libmongoc-1.0")
-include_directories("/usr/include/libbson-1.0")
 add_executable(AuthenticationService main.c
         threadsdata.h
         cli/cli.h
@@ -38,10 +37,8 @@ add_executable(AuthenticationService main.c
         server/response.c
         sha/sha.h
         sha/sha.c
-        sha/test_sha2.c
         hmac/hmac_sha2.h
         hmac/hmac_sha2.c
-        hmac/test_hmac.c
         server/base64.c
         server/base64.c
         server/base64.c
@@ -51,23 +48,28 @@ add_executable(AuthenticationService main.c
         server/server.c
 )
 target_link_libraries(AuthenticationService
+        PUBLIC
         ${OPENSSL_LIBRARIES}
         ${CJSON_LIBRARY}
         ${CMAKE_THREAD_LIBS_INIT}
-        /usr/lib/x86_64-linux-gnu/libmongoc-1.0.so
-        /usr/lib/x86_64-linux-gnu/libbson-1.0.so
 )
+target_link_libraries(AuthenticationService PRIVATE mongo::mongoc_shared)
+
 
 add_executable(AuthenticationServiceClient client.c)
 target_link_libraries(AuthenticationServiceClient
         ${OPENSSL_LIBRARIES}
 )
+option(BUILD_TESTS "Build test executables" OFF)
 
-add_executable(test_sha sha/test_sha2.c sha/sha.c)
-target_link_libraries(test_sha ${OPENSSL_LIBRARIES})
+if(BUILD_TESTS)
+    add_executable(test_sha sha/test_sha2.c sha/sha.c)
+    target_link_libraries(test_sha ${OPENSSL_LIBRARIES})
 
-add_executable(test_hmac hmac/test_hmac.c hmac/hmac_sha2.c sha/sha.c)
-target_link_libraries(test_hmac ${OPENSSL_LIBRARIES})
+    add_executable(test_hmac hmac/test_hmac.c hmac/hmac_sha2.c sha/sha.c)
+    target_link_libraries(test_hmac ${OPENSSL_LIBRARIES})
+endif()
+
 
 
 
