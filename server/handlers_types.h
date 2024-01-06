@@ -11,6 +11,5 @@ enum HandlerTypes_e {
     UNSUPPORTED
 };
 
-typedef void (*serv_func_type)(const struct RequestParam_s *, struct ResponseParam_s *);
-
+typedef void (*serv_func_type)(const struct RequestParam_s *, struct ResponseParam_s *, const struct MongoData_s *);
 #endif

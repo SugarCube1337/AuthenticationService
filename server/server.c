@@ -14,23 +14,34 @@
 #include "server.h"
 #include "jwt.h"
 #include "../utils/utils.h"
+#include "../database/database.h"
 
 // --------- server work logic in handlers
 
 const char *jwtKey = "YW50aS1wYXR0ZXJu"; // anti-pattern
 
 
+void AskToken(const struct RequestParam_s *request, struct ResponseParam_s *response, const struct MongoData_s *db) {
 
-void AskToken(const struct RequestParam_s *request, struct ResponseParam_s *response) {
-    char *user = LookUpParamValue(request->queryParams, "name");
-    if (user) {
-        printf("%s ask token\n", user);
+    char *username = LookUpParamValue(request->queryParams, "name");
+    if (username) {
+        printf("%s ask token\n", username);
 
-        // 1. search in DB user (we have a simple user data example without hash of user pass or smth else)
+        // 1. Search in DB for the user
+        bson_t *query = bson_new();
+        BSON_APPEND_UTF8(query, "username", username);
 
+        mongoc_cursor_t *cursor = mongoc_collection_find_with_opts(
+                db->collUser, query, NULL, NULL
+        );
 
+        const bson_t *dbRes;
 
-        char *dbRes = "{\"_id\": \"277353dead\", \"username\": \"pupsik\", \"services\": [\"serv1\", \"serv2\"]}";
+        if (mongoc_cursor_next(cursor, &dbRes)) {
+            char *str = bson_as_canonical_extended_json(dbRes, NULL);
+            printf("%s\n", str);
+            bson_free(str);
+        }
 
         // 2. jwt
 
@@ -46,23 +57,25 @@ void AskToken(const struct RequestParam_s *request, struct ResponseParam_s *resp
         }
 
         ReleaseJwt(jwt);
+        bson_destroy(query);
+        mongoc_cursor_destroy(cursor);
     } else {
         response->status = BAD_REQUEST;
     }
 }
 
-void ValidateToken(const struct RequestParam_s *request, struct ResponseParam_s *response) {
+
+void ValidateToken(const struct RequestParam_s *request, struct ResponseParam_s *response, const struct MongoData_s *db) {
     if (request->body == NULL) {
         response->status = BAD_REQUEST;
         return;
     }
-    char *body = "eyJhbGciOiAiSFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJfaWQiOiAiMjc3MzUzZGVhZCIsICJ1c2VybmFtZSI6ICJwdXBzaWsiLCAic2VydmljZXMiOiBbInNlcnYxIiwgInNlcnYyIl19.0u12/m86MXmmiaT14q4w9YF8UM70AqFHOVSzq994uns=";
 
-    if (!CheckJwtHeader(body)) {
+    if (!CheckJwtHeader(request->body)) {
         response->status = FORBIDDEN;
         return;
     }
-    if (!CheckJwtSign(body, jwtKey, strlen(jwtKey))) {
+    if (!CheckJwtSign(request->body, jwtKey, strlen(jwtKey))) {
         response->status = FORBIDDEN;
         return;
     }
@@ -70,7 +83,7 @@ void ValidateToken(const struct RequestParam_s *request, struct ResponseParam_s 
     // check jwt payload
 
     // 1. get only payload
-    char *localBody = strdup(body);
+    char *localBody = strdup(request->body);
     strtok(localBody, "."); // skip header
     char *payload = strtok(NULL, ".");
     if (payload == NULL) {
@@ -106,12 +119,28 @@ void ValidateToken(const struct RequestParam_s *request, struct ResponseParam_s 
         return;
     }
 
-    // 4. search in DB user doc
+    bson_t *query = bson_new();
+    BSON_APPEND_UTF8(query, "username", userName->valuestring);
 
+    mongoc_cursor_t *cursor = mongoc_collection_find_with_opts(
+            db->collUser, query, NULL, NULL
+    );
 
+    const bson_t *dbRes;
 
-    char *dbRes = "{\"_id\": \"277353dead\", \"username\": \"pupsik\", \"services\": [\"serv1\", \"serv2\"]}";
+    if (!mongoc_cursor_next(cursor, &dbRes)) {
+        response->status = FORBIDDEN;
+        cJSON_Delete(payloadJson);
+        free(decodedPayload);
+        free(localBody);
+        bson_destroy(query);
+        mongoc_cursor_destroy(cursor);
+        return;
+    }
 
+    char *str = bson_as_canonical_extended_json(dbRes, NULL);
+    printf("%s\n", str);
+    bson_free(str);
     // 5. compare DB result and token value
     if (strcmp(decodedPayload, dbRes) != 0) {
         cJSON_Delete(payloadJson);
@@ -126,7 +155,11 @@ void ValidateToken(const struct RequestParam_s *request, struct ResponseParam_s 
     free(decodedPayload);
     free(localBody);
     response->status = OK;
+    bson_destroy(query);
+    mongoc_cursor_destroy(cursor);
 }
+
+
 
 // --------- internal server functions
 
@@ -134,7 +167,7 @@ void RegisterMethod(struct ServerData_s *sd, enum HandlerTypes_e type, char *pat
     AddToHandlersList(sd->handlres, type, path, f);
 }
 
-void RunMethod(struct ServerData_s *sd, const char *request, char *response) {
+void RunMethod(struct ServerData_s *sd, struct MongoData_s *db, const char *request, char *response) {
     struct RequestParam_s *rq = ParseParams(request);
     struct ResponseParam_s *rs = CreateEmptyResp();
 
@@ -143,7 +176,7 @@ void RunMethod(struct ServerData_s *sd, const char *request, char *response) {
     if (f == NULL) { // no registered method? or t is UNSUPPORTED? or p is unknown?
         rs->status = BAD_REQUEST;
     } else {
-        f(rq, rs); // else run registered method
+        f(rq, rs, db); // else run registered method
     }
 
     ConstructStrResp(rs, response);
@@ -159,7 +192,7 @@ int CreateSocket(int port) {
     saddr.sin_addr.s_addr = htons(INADDR_ANY);
 
     listfd = socket(AF_INET, SOCK_STREAM, 0);
-    if(listfd == -1) {
+    if (listfd == -1) {
         printf("socket() ret %d, %s\nstop child thread\n", errno, strerror(errno));
         return -1;
     }
@@ -179,7 +212,7 @@ int CreateSocket(int port) {
         return -1;
     }
 
-    if(bind(listfd, (const struct sockaddr *) &saddr, sizeof(saddr)) == -1) {
+    if (bind(listfd, (const struct sockaddr *) &saddr, sizeof(saddr)) == -1) {
         close(listfd);
 
         printf("bind() ret %d, %s\nstop child thread\n", errno, strerror(errno));
@@ -224,8 +257,8 @@ int ConfigureContext(SSL_CTX *ctx) {
     return 1;
 }
 
-void *NetInterface (void *arg) {
-    struct ThreadData_s *threadData = (struct ThreadData_s*)arg;
+void *NetInterface(void *arg) {
+    struct ThreadData_s *threadData = (struct ThreadData_s *) arg;
 
     threadData->sd.handlres = CreateHandlersList();
     if (threadData->sd.handlres == NULL) {
@@ -275,7 +308,7 @@ void *NetInterface (void *arg) {
     }
 
     struct epoll_event detectedEvent;
-    memset((void *)&detectedEvent, 0, sizeof(struct epoll_event));
+    memset((void *) &detectedEvent, 0, sizeof(struct epoll_event));
 
     char recBuf[MAX_REQUEST_SIZE];
     char sendBuf[MAX_RESPONSE_SIZE];
@@ -298,7 +331,7 @@ void *NetInterface (void *arg) {
                 memset(sendBuf, 0, sizeof(sendBuf));
 
                 connfd = accept(listfd, NULL, NULL);
-                if(connfd == -1) {
+                if (connfd == -1) {
                     continue;
                 }
 
@@ -312,7 +345,7 @@ void *NetInterface (void *arg) {
 
                     //ssize_t n = read(connfd, recBuf, sizeof(recBuf));
                     ssize_t n = SSL_read(sslConnection, recBuf, sizeof(recBuf));
-                    if(n == -1) {
+                    if (n == -1) {
                         SSL_shutdown(sslConnection);
                         SSL_free(sslConnection);
                         close(connfd);
@@ -323,7 +356,7 @@ void *NetInterface (void *arg) {
                     snprintf(sendBuf, sizeof(sendBuf), "server got msg: %s\n", recBuf);
                     printf("%s", sendBuf);
 
-                    RunMethod(&threadData->sd, recBuf, sendBuf);
+                    RunMethod(&threadData->sd, &threadData->db, recBuf, sendBuf);
 
                     //n = write(connfd, sendBuf, strlen(sendBuf));
                     n = SSL_write(sslConnection, sendBuf, strlen(sendBuf));

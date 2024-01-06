@@ -10,6 +10,7 @@
 #define BAD_REQUEST 400
 #define FORBIDDEN 401
 #define INTERNAL_SERVER_ERROR 500
+#define NOT_FOUND 404
 
 struct ResponseParam_s {
     int status;

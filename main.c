@@ -69,10 +69,9 @@ int main() {
     sigset_t sigset;
     int signo, status;
 
-
+    InitOpenSslLib();
 
     status = InitDb(&threadData);
-    InitOpenSslLib();
     if (status == 0) {
         exit(1);
     }
